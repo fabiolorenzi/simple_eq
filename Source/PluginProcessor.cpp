@@ -228,6 +228,13 @@ void SimpleEQAudioProcessor::updateCoefficients(Coefficients& old, const Coeffic
     *old = *replacements;
 }
 
+template<int Index, typename ChainType, typename CoefficientType>
+void SimpleEQAudioProcessor::update(ChainType& chain, const CoefficientType& coefficients)
+{
+    updateCoefficients(chain.template get<Index>().coefficients, coefficients[Index]);
+    chain.template setBypassed<Index>(false);
+}
+
 template<typename ChainType, typename CoefficientType>
 void SimpleEQAudioProcessor::updateCutFilter(ChainType& posLowCut, const CoefficientType& cutCoefficients, const Slope& lowCutSlope)
 {
@@ -237,34 +244,14 @@ void SimpleEQAudioProcessor::updateCutFilter(ChainType& posLowCut, const Coeffic
     posLowCut.template setBypassed<3>(true);
 
     switch (lowCutSlope) {
-        case Slope_12:
-            *posLowCut.template get<0>().coefficients = *cutCoefficients[0];
-            posLowCut.template setBypassed<0>(false);
-            break;
-        case Slope_24:
-            *posLowCut.template get<0>().coefficients = *cutCoefficients[0];
-            posLowCut.template setBypassed<0>(false);
-            *posLowCut.template get<1>().coefficients = *cutCoefficients[1];
-            posLowCut.template setBypassed<1>(false);
-            break;
-        case Slope_36:
-            *posLowCut.template get<0>().coefficients = *cutCoefficients[0];
-            posLowCut.template setBypassed<0>(false);
-            *posLowCut.template get<1>().coefficients = *cutCoefficients[1];
-            posLowCut.template setBypassed<1>(false);
-            *posLowCut.template get<2>().coefficients = *cutCoefficients[2];
-            posLowCut.template setBypassed<2>(false);
-            break;
         case Slope_48:
-            *posLowCut.template get<0>().coefficients = *cutCoefficients[0];
-            posLowCut.template setBypassed<0>(false);
-            *posLowCut.template get<1>().coefficients = *cutCoefficients[1];
-            posLowCut.template setBypassed<1>(false);
-            *posLowCut.template get<2>().coefficients = *cutCoefficients[2];
-            posLowCut.template setBypassed<2>(false);
-            *posLowCut.template get<3>().coefficients = *cutCoefficients[3];
-            posLowCut.template setBypassed<3>(false);
-            break;
+            update<3>(posLowCut, cutCoefficients);
+        case Slope_36:
+            update<2>(posLowCut, cutCoefficients);
+        case Slope_24:
+            update<1>(posLowCut, cutCoefficients);
+        case Slope_12:
+            update<0>(posLowCut, cutCoefficients);
     }
 }
 
