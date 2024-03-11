@@ -130,7 +130,7 @@ bool SimpleEQAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleEQAudioProcessor::createEditor()
 {
-    return new SimpleEQAudioProcessorEditor (*this);
+    return new juce::GenericAudioProcessorEditor(*this);
 }
 
 void SimpleEQAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
