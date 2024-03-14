@@ -23,6 +23,7 @@ private:
     juce::Atomic<bool> parametersChanged{ false };
 
     MonoChain monoChain;
+    bool justStarted;
 };
 
 class SimpleEQAudioProcessorEditor  : public juce::AudioProcessorEditor

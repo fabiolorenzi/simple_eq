@@ -17,6 +17,7 @@ ResponseCurveComponent::~ResponseCurveComponent()
     for (auto param : params) {
         param->removeListener(this);
     }
+    justStarted = true;
 }
 
 void ResponseCurveComponent::parameterValueChanged(int parameterIndex, float newValue)
@@ -26,8 +27,11 @@ void ResponseCurveComponent::parameterValueChanged(int parameterIndex, float new
 
 void ResponseCurveComponent::timerCallback()
 {
-    if (parametersChanged.compareAndSetBool(false, true))
+    if (parametersChanged.compareAndSetBool(false, true) || justStarted)
     {
+        // This below is to paint curve when just opened
+        justStarted = false;
+
         // These are to update the mono chain
         auto chainSettings = getChainSettings(audioProcessor.apvts);
         auto peakCoefficients = makePeakFilter(chainSettings, audioProcessor.getSampleRate());
