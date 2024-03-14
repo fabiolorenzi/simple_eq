@@ -151,17 +151,21 @@ bool SimpleEQAudioProcessor::hasEditor() const
 
 juce::AudioProcessorEditor* SimpleEQAudioProcessor::createEditor()
 {
-    return new juce::GenericAudioProcessorEditor(*this);
+    return new SimpleEQAudioProcessorEditor(*this);
+    // The code below is to create a generic GUI to test the DSP
+    // return new juce::GenericAudioProcessorEditor(*this);
 }
 
 void SimpleEQAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
+    // This code here is to get a saved setup
     juce::MemoryOutputStream mos(destData, true);
     apvts.state.writeToStream(mos);
 }
 
 void SimpleEQAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
+    // This code here is to save the state of the plugin to recall on open
     auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
     if (tree.isValid()) {
         apvts.replaceState(tree);
