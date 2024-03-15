@@ -6,6 +6,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics& g, int x, int y, int width, i
     using namespace juce;
 
     auto bounds = Rectangle<float>(x, y, width, height);
+
     g.setColour(Colour(10u, 10u, 10u));
     g.fillEllipse(bounds);
 
@@ -83,7 +84,9 @@ void RotarySliderWithLabels::paint(juce::Graphics& g)
 
     auto sliderBounds = getSliderBounds();
 
-    getLookAndFeel().drawRotarySlider(g, sliderBounds.getX(), sliderBounds.getY(), sliderBounds.getWidth(), sliderBounds.getHeight(), jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0), startAng, endAng, *this);
+    //getLookAndFeel().drawRotarySlider(g, sliderBounds.getX(), sliderBounds.getY(), sliderBounds.getWidth(), sliderBounds.getHeight(), jmap(getValue(), range.getStart(), range.getEnd(), 0.0, 1.0), startAng, endAng, *this);
+    // The code below is to keep the skew factor from the plugin processor file
+    getLookAndFeel().drawRotarySlider(g, sliderBounds.getX(), sliderBounds.getY(), sliderBounds.getWidth(), sliderBounds.getHeight(), valueToProportionOfLength(getValue()), startAng, endAng, *this);
 
     auto center = sliderBounds.toFloat().getCentre();
     auto radius = sliderBounds.getWidth() * 0.5f;
